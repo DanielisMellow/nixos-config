@@ -22,5 +22,5 @@ Flake-powered NixOS configuration for my **Razer Blade 14**
 > Requires: NixOS 24.11+ with Internet
 
 ```bash
-bash <(curl -sL https://raw.githubusercontent.com/lizardkingdev/nixos-config/main/install.sh)
+bash <(curl -sL https://raw.githubusercontent.com/DanielisMellow/nixos-config/main/install.sh)
 
