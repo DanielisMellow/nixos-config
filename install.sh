@@ -76,18 +76,18 @@ esac
 # 🚀 Run install
 # ───────────────
 if [[ "$choice" == "1" ]]; then
-    echo "[+] Using remote flake: github:lizardkingdev/nixos-config#$host"
-    sudo nixos-rebuild switch --flake github:lizardkingdev/nixos-config#"$host"
+    echo "[+] Using remote flake: github:DanielisMellow/nixos-config#$host"
+    sudo nixos-rebuild switch --flake github:DanielisMellow/nixos-config#"$host"
 
 else
     if [[ "$force" == "1" ]]; then
         echo "[!] Force mode: removing existing /etc/nixos and re-cloning..."
         sudo rm -rf /etc/nixos
-        sudo git clone https://github.com/lizardkingdev/nixos-config /etc/nixos
+        sudo git clone https://github.com/DanielisMellow/nixos-config /etc/nixos
     elif [ ! -d /etc/nixos/.git ]; then
         echo "[+] /etc/nixos is not a Git repo. Cloning your config..."
         sudo rm -rf /etc/nixos
-        sudo git clone https://github.com/lizardkingdev/nixos-config /etc/nixos
+        sudo git clone https://github.com/DanielisMellow/nixos-config /etc/nixos
     fi
 
     cd /etc/nixos
