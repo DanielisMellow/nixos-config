@@ -1,30 +1,34 @@
 #!/usr/bin/env bash
-set -e
+set -euo pipefail
 
-# ─── Paths ─────────────────────────────────────────────
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
-REPO_DIR="$(dirname "$SCRIPT_DIR")"
-SOURCE_DIR="/etc/nixos"
-
-# ─── Sudo check ────────────────────────────────────────
-if [ "$EUID" -ne 0 ]; then
-    echo "🔐 Sudo required. Prompting..."
+# ─── Auto-sudo ─────────────────────────────────────────
+if [[ $EUID -ne 0 ]]; then
+    echo "🔐 Sudo required. Re-running as root..."
     exec sudo "$0" "$@"
 fi
 
-echo "📁 Backing up /etc/nixos into $REPO_DIR..."
+# ─── Directories ───────────────────────────────────────
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+REPO_DIR="$SCRIPT_DIR"
+SOURCE_DIR="/etc/nixos"
 
-# ─── Copy everything ───────────────────────────────────
-rsync -av --delete "$SOURCE_DIR/" "$REPO_DIR/"
+# ─── Rsync (mirror files, preserve structure) ─────────
+echo "📁 Syncing /etc/nixos → $REPO_DIR"
+rsync -av --delete \
+    --exclude=".git" \
+    --exclude="README.md" \
+    --exclude="install.sh" \
+    --exclude="backup.sh" \
+    "$SOURCE_DIR/" "$REPO_DIR/"
 
-# ─── Fix ownership for user ────────────────────────────
+# ─── Fix ownership (for git push) ─────────────────────
 chown -R "$SUDO_USER:users" "$REPO_DIR"
 
-# ─── Git commit & push ─────────────────────────────────
+# ─── Git commit ───────────────────────────────────────
 cd "$REPO_DIR"
-DATE=$(date "+%Y-%m-%d %H:%M")
+TIMESTAMP=$(date "+%Y-%m-%d %H:%M")
 git add .
-git commit -m "🛡 Backup from /etc/nixos — $DATE"
+git commit -m "🛡 NixOS backup from /etc/nixos — $TIMESTAMP"
 git push
 
-echo "✅ Backup complete and pushed to GitHub!"
+echo "✅ Backup complete and synced with GitHub!"

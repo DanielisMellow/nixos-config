@@ -24,5 +24,6 @@
     jq
     yad
     ncdu
+    rsync
   ];
 }
