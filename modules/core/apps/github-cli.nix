@@ -1,12 +1,8 @@
 { config, pkgs, ... }:
 {
   environment.systemPackages = with pkgs; [
-    github-desktop
-    libsecret
-    glib
+    gh
   ];
-  services.gnome.gnome-keyring.enable = true;
-  programs.seahorse.enable = true; # optional GUI for managing secrets
 
 
 }

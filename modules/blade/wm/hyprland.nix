@@ -21,16 +21,15 @@
 
   # Enable graphics stack (OpenGL, etc.)
   hardware.graphics.enable = true;
-
   # NVIDIA driver setup
   services.xserver.enable = true;
   services.xserver.videoDrivers = [ "nvidia" ];
 
   hardware.nvidia = {
-    modesetting.enable = true;        # Required for Wayland
-    powerManagement.enable = true;    # Optional: allows power saving
-    open = false;                     # Keep false for RTX 3070 (proprietary driver is better)
-    nvidiaSettings = true;            # Enables `nvidia-settings` GUI
+    modesetting.enable = true; # Required for Wayland
+    powerManagement.enable = true; # Optional: allows power saving
+    open = false; # Keep false for RTX 3070 (proprietary driver is better)
+    nvidiaSettings = true; # Enables `nvidia-settings` GUI
   };
 }
 
