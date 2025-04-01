@@ -24,11 +24,13 @@ rsync -av --delete \
 # ─── Fix ownership (for git push) ─────────────────────
 chown -R "$SUDO_USER:users" "$REPO_DIR"
 
-# ─── Git commit ───────────────────────────────────────
+# ─── Git commit as original user ──────────────────────
+sudo -u "$SUDO_USER" bash <<'EOF'
 cd "$REPO_DIR"
 TIMESTAMP=$(date "+%Y-%m-%d %H:%M")
 git add .
 git commit -m "🛡 NixOS backup from /etc/nixos — $TIMESTAMP"
 git push
+EOF
 
 echo "✅ Backup complete and synced with GitHub!"
