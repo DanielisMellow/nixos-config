@@ -4,7 +4,9 @@
   imports = [
     ./wm/hyprland.nix
     ./wm/hyprland-addons.nix
+    ./openrazer.nix
     ./power.nix
     ./steam.nix
+    ./udisks2.nix
   ];
 }
