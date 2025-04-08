@@ -56,7 +56,7 @@
           modules = [ ./hosts/blade/configuration.nix ];
         };
 
-        blade = nixpkgs.lib.nixosSystem {
+        wsl = nixpkgs.lib.nixosSystem {
           specialArgs = {
             inherit inputs outputs username;
             host = "wsl";
