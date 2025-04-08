@@ -9,52 +9,61 @@
   };
 
   outputs = { self, nixpkgs, ... } @ inputs:
-  let
-    inherit (self) outputs;
+    let
+      inherit (self) outputs;
 
-    username = "lizardking";
+      username = "lizardking";
 
-    systems = [
-      "aarch64-linux"
-      "i686-linux"
-      "x86_64-linux"
-      "aarch64-darwin"
-      "x86_64-darwin"
-    ];
+      systems = [
+        "aarch64-linux"
+        "i686-linux"
+        "x86_64-linux"
+        "aarch64-darwin"
+        "x86_64-darwin"
+      ];
 
-    forAllSystems = nixpkgs.lib.genAttrs systems;
-  in {
-    # Your custom packages, available via 'nix build', 'nix shell', etc.
-    packages = forAllSystems (system:
-      import ./pkgs nixpkgs.legacyPackages.${system}
-    );
+      forAllSystems = nixpkgs.lib.genAttrs systems;
+    in
+    {
+      # Your custom packages, available via 'nix build', 'nix shell', etc.
+      packages = forAllSystems (system:
+        import ./pkgs nixpkgs.legacyPackages.${system}
+      );
 
-    # Formatter for nix files
-    formatter = forAllSystems (system:
-      nixpkgs.legacyPackages.${system}.alejandra
-    );
+      # Formatter for nix files
+      formatter = forAllSystems (system:
+        nixpkgs.legacyPackages.${system}.alejandra
+      );
 
-    # Export reusable modules
-    nixosModules = import ./modules/core;
+      # Export reusable modules
+      nixosModules = import ./modules/core;
 
-    # Define your NixOS systems
-    nixosConfigurations = {
-      vm = nixpkgs.lib.nixosSystem {
-        specialArgs = {
-          inherit inputs outputs username;
-          host = "vm";
+      # Define your NixOS systems
+      nixosConfigurations = {
+        vm = nixpkgs.lib.nixosSystem {
+          specialArgs = {
+            inherit inputs outputs username;
+            host = "vm";
+          };
+          modules = [ ./hosts/vm/configuration.nix ];
         };
-        modules = [ ./hosts/vm/configuration.nix ];
-      };
 
-      blade = nixpkgs.lib.nixosSystem {
-        specialArgs = {
-          inherit inputs outputs username;
-          host = "blade";
+        blade = nixpkgs.lib.nixosSystem {
+          specialArgs = {
+            inherit inputs outputs username;
+            host = "blade";
+          };
+          modules = [ ./hosts/blade/configuration.nix ];
         };
-        modules = [ ./hosts/blade/configuration.nix ];
+
+        blade = nixpkgs.lib.nixosSystem {
+          specialArgs = {
+            inherit inputs outputs username;
+            host = "wsl";
+          };
+          modules = [ ./hosts/wsl/configuration.nix ];
+        };
       };
     };
-  };
 }
 
